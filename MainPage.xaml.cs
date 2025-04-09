@@ -1,11 +1,12 @@
-﻿namespace adresbok
+namespace adresbok
 
 {
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Windows.Input;
     using MVVM.Models;
     using System.Linq;
+    using Microsoft.Maui.Controls;
+
     public partial class MainPage : ContentPage
     {
         int count = 0;
@@ -17,50 +18,45 @@
         public MainPage()
         {
             InitializeComponent();
-            osoby.Add(new Osoby("2137", "greg", "miejsce"));
             rzecz.BindingContext = osoby;
             rzecz.ItemsSource = osoby;
-            
         }
 
         private void Button_Clicked(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(dane.Text) && !string.IsNullOrEmpty(dane1.Text) && !string.IsNullOrEmpty(dane2.Text))
             {
-                if (dane.Text.All(char.IsDigit)){
+                if (dane.Text.All(char.IsDigit))
+                {
                     osoby.Add(new Osoby(dane.Text.ToString(), dane1.Text.ToString(), dane2.Text.ToString()));
                     dane.Text = "";
                     dane1.Text = "";
                     dane2.Text = "";
                 }
-                
+
             }
         }
 
-        private void Button_Clicked_1(object sender, EventArgs e)
+
+
+
+
+        private async  void rzecz_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Osoby tmp = (Osoby)rzecz.SelectedItem;
-            if (tmp != null)
+            if(rzecz.SelectedItem == null)
             {
-                osoby.Remove(tmp);
+                return;
             }
-        }
-
-
-        
-        
-        private async void rzecz_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if(rzecz.SelectedItem != null) {
-            var tryb = await DisplayAlert("wybrałeś element", "co chcesz z nim zrobić", "usuń", "edytuj");
-            int index = osoby.IndexOf((Osoby)rzecz.SelectedItem);
+            if (rzecz.SelectedItem != null)
+            {
+                var tryb = await DisplayAlert("wybrałeś element", "co chcesz z nim zrobić", "usuń", "edytuj"); 
+                int index = osoby.IndexOf((Osoby)rzecz.SelectedItem);
 
                 if (tryb)
                 {
-                    Osoby tmp = (Osoby)rzecz.SelectedItem;
-                    rzecz.SelectedItem = null;
+                    
                     osoby.RemoveAt(index);
-                   
+
                 }
                 else
                 {
@@ -79,7 +75,7 @@
                         osoby[index] = new Osoby(rzecz3, rzecz2, rzecz1);
                     }
                     */
-                }   
+                }
             }
         }
         private void Button_Clicked_2(object sender, EventArgs e)
@@ -90,13 +86,30 @@
             {
                 if (editNumer.Text.All(char.IsDigit))
                 {
-                    var p = osoby[index];
+                    ObservableCollection<Osoby> tmp = new ObservableCollection<Osoby>();
+                    foreach(Osoby osoba in osoby)
+                    {
+                        tmp.Add(osoba);
+                    }
+                    
+                    var p = tmp[index];
                     p.Numer = editNumer.Text;
                     p.Imie = editName.Text;
                     p.Adres = editAdres.Text;
-                    osoby[index] = p;
+
+                    tmp[index] = p;
+                    if (true)
+                    {
+                        Console.WriteLine("kurwy ");
+                    }
+                    osoby = tmp;
+                    rzecz.BindingContext = null;
+                    rzecz.ItemsSource = null;
+                    rzecz.BindingContext = osoby;
+                    rzecz.ItemsSource = osoby;
+                    rzecz.SelectedItem = null;
                 }
-                
+
             }
             editForm.IsVisible = false;
             dodawanie.IsVisible = true;
@@ -115,11 +128,11 @@
                     wyszakane.Add(osoba);
                 }
             }
-            if(wyszakane.Count > 0)
+            if (wyszakane.Count > 0)
             {
-            wyszukane.BindingContext = wyszakane;
-            wyszukane.ItemsSource = wyszakane;
-            wyszukane.IsVisible = true;
+                wyszukane.BindingContext = wyszakane;
+                wyszukane.ItemsSource = wyszakane;
+                wyszukane.IsVisible = true;
             }
 
         }
