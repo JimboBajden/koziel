@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="adresbok.MainPage">
+    <ScrollView>
+        
+    
+    <VerticalStackLayout >
+            <VerticalStackLayout x:Name="dodawanie" MinimumWidthRequest="255" MaximumWidthRequest="512" Margin="0,0,0,10">
+                <Label Margin="0,10,0,20" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Large">Dodaj Osobe</Label>
+                <Entry x:Name="dane" Placeholder="numer" />
+                <Entry x:Name="dane1" Placeholder="imie"/>
+                <Entry x:Name="dane2" Placeholder="adres"/>
+                <Button Text="dodaj" Clicked="Button_Clicked"/>
+            </VerticalStackLayout>
+        
+        
+            <VerticalStackLayout x:Name="editForm" MinimumWidthRequest="255" MaximumWidthRequest="512" IsVisible="False" >
+                <Label Text="Edit User" Padding="16,0,0,0" />
+                <Entry Placeholder="numer" x:Name="editNumer" />
+                <Entry Placeholder="imie" x:Name="editName" />
+                <Entry Placeholder="adres" x:Name="editAdres" />
+                <Button Text="Edit user" Clicked="Button_Clicked_2"/>
+            </VerticalStackLayout>
+        
+        
+            <Frame>
+            <CollectionView
+                ItemsLayout="VerticalList"
+                x:Name="rzecz"
+                SelectionMode="Single"
+                SelectionChanged="rzecz_SelectionChanged"
+            >
+            <CollectionView.ItemTemplate>
+                <DataTemplate >
+                    <Frame>
+                        <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Text="{Binding Numer}"/>
+                        <Label Grid.Row="1" Text="{Binding Adres}"/>
+                        <Label Grid.Row="2" Text="{Binding Imie}"/>
+                    </Grid>
+                </Frame>
+            </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        </Frame>
+        <VerticalStackLayout Margin="0,0,0,100">
+
+                <Label Margin="0,50,0,20" VerticalOptions="Center" HorizontalOptions="Center" Text="wyszukaj" FontSize="Large"/>
+            <SearchBar x:Name="searchBar"
+                   SearchCommand="{Binding PerformSearch}"
+                   SearchCommandParameter="{Binding Text, x:DataType='SearchBar', Source={x:Reference searchBar}}"
+                   SearchButtonPressed="searchBar_SearchButtonPressed" 
+                       
+                       TextChanged="searchBar_SearchButtonPressed"/>
+            <Frame>
+                <CollectionView
+                        ItemsLayout="VerticalList"
+                        x:Name="wyszukane"
+                        SelectionMode="Single"
+                        IsVisible="False">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate >
+                            <Frame>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Label Grid.Row="0" Text="{Binding Numer}"/>
+                                    <Label Grid.Row="1" Text="{Binding Adres}"/>
+                                    <Label Grid.Row="2" Text="{Binding Imie}"/>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Frame>
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+        
+        
+    </ScrollView>
+</ContentPage>
